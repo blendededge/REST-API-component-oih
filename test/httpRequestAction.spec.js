@@ -357,6 +357,79 @@ describe('httpRequest action', () => {
     });
   });
 
+  describe('saveReceivedData', () => {
+    it('should forward received data when saveReceivedData=true', async () => {
+      const messagesNewMessageWithBodyStub = stub(
+        messages,
+        'newMessage',
+      ).returns(Promise.resolve());
+      const msg = {
+        data: {
+          url: 'http://example.com',
+        },
+      };
+
+      const cfg = {
+        reader: {
+          url: '$$.data.url',
+          method: 'GET',
+        },
+        auth: {},
+        saveReceivedData: true,
+      };
+
+      const responseMessage = { message: 'hello world' };
+
+      const responseOutput = {
+        received: msg.data,
+        response: responseMessage,
+      };
+
+      nock(transform(msg, { customMapping: cfg.reader.url }))
+        .intercept('/', 'GET')
+        .delay(20 + Math.random() * 200)
+        .reply((uri, requestBody) => [200, responseMessage]);
+
+      await processAction.call(emitter, msg, cfg);
+      expect(messagesNewMessageWithBodyStub.args[0][0]).to.eql(
+        responseOutput,
+      );
+    });
+
+    it('should not forward received data when saveReceivedData=false', async () => {
+      const messagesNewMessageWithBodyStub = stub(
+        messages,
+        'newMessage',
+      ).returns(Promise.resolve());
+      const msg = {
+        data: {
+          url: 'http://example.com',
+        },
+      };
+
+      const cfg = {
+        reader: {
+          url: '$$.data.url',
+          method: 'GET',
+        },
+        auth: {},
+        saveReceivedData: false,
+      };
+
+      const responseMessage = { message: 'hello world' };
+
+      nock(transform(msg, { customMapping: cfg.reader.url }))
+        .intercept('/', 'GET')
+        .delay(20 + Math.random() * 200)
+        .reply((uri, requestBody) => [200, responseMessage]);
+
+      await processAction.call(emitter, msg, cfg);
+      expect(messagesNewMessageWithBodyStub.args[0][0]).to.eql(
+        responseMessage,
+      );
+    });
+  });
+
   describe('when all params is correct', () => {
     ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].forEach((method, index) => {
       it(`should properly execute ${method} request`, async () => {
