@@ -1,4 +1,4 @@
-FROM node:14-alpine AS base
+FROM node:16-alpine AS base
 
 ENV ELASTICIO_OTEL_SERVICE_NAME=COMPONENT:REST
 
@@ -10,7 +10,7 @@ WORKDIR /usr/src/app
 
 COPY package.json /usr/src/app
 
-RUN yarn install --production
+RUN npm install --production
 
 COPY . /usr/src/app
 
