@@ -10,4 +10,4 @@ updates:
     schedule:
       interval: "daily"
     allow: 
-      - "ferryman-extensions"
+      - dependency-name: "ferryman-extensions"
