@@ -26,6 +26,16 @@ The following is a complete list of configuration fields that are available on t
 
 - **`dontThrowErrorFlg`** - If set to `true` return an HTTP error as the response and continue the flow. Otherwise throw error to stop the flow flow. Default is set to `false`.
 
+- **`enableRebound`** - Enabling rebound will retry any request that receives the following response codes. It accepts `true` or `false`. Default is set to `false`.
+  - 408: Request Timeout
+  - 423: Locked
+  - 429: Too Many Requests
+  - 500: Internal Server Error
+  - 502: Bad Gateway
+  - 503: Service Unavailable
+  - 504: Gateway Timeout
+  - DNS lookup timeout
+
 - **`explicitArray`** - XML responses are automatically parsed into JSON. When `explicitArray` is set to `true`, child nodes will always be put in an array. When `false` (the default), child nodes will only be put in an array if there is more than one child node.
 
 - **`followRedirect`** - By default the `followRedirect` option is set to to the value `followRedirects` and will allow your API request to follow redirects on the server for up to 5 redirects. If you want disable Follow Redirect functionality, you can set the `followRedirect` option to `doNotFollowRedirects`.
@@ -36,7 +46,7 @@ The following is a complete list of configuration fields that are available on t
 
 - **`noStrictSSL`** - If set to `true`, disables verifying the server certificate. This is not recommended for most uses. The default is set to `false`.
 
-- **`reader`** - All configuration about the API request is configured here.
+- **`reader`** - All configuration about the API request is configured here. See below.
 
 - **`requestTimeoutPeriod`** - Timeout period in milliseconds (1-1140000) while component waiting for server response, This would overwrite the REQUEST_TIMEOUT environment variable if configuration field is provided. Defaults to 100000 (100 sec).
 
@@ -54,16 +64,6 @@ The following options are used to set up the HTTP request. They all live under a
 - **`method`** - The HTTP method to be executed. `GET`, `PUT`, `POST`, `DELETE` and `PATCH` are supported.
 
 - **`body`** - A JSONata expression that executes against the message passed into the component to define the request body for any HTTP request that doesn't use the method `GET`. Hint: To just accept the message passed in as the message data, without making any transformation, simply use `$$` to make it a basic JSONata expression that references the root of the message. Unlike older versions of this component, this JSONata executes relative to `msg` not `msg.data` or `msg.body`.
-
-- **`enableRebound`** - Enabling rebound will retry any request that receives the following response codes. It accepts `true` or `false`. Default is set to `false`.
-  - 408: Request Timeout
-  - 423: Locked
-  - 429: Too Many Requests
-  - 500: Internal Server Error
-  - 502: Bad Gateway
-  - 503: Service Unavailable
-  - 504: Gateway Timeout
-  - DNS lookup timeout
 
 - **`headers`** - An array of objects with `key` and `value` as the only properties on each. `key` is used to store the header name and `value` its value.
   
@@ -111,11 +111,11 @@ The component has the ability to loop through pages in one run of the trigger or
 
 The options for configuring one page per trigger are part of the general configurations above. To trigger the component once, but iterate through multiple pages of results, you must configure the following:
 
-- `pagingEnabled` must be set to true.
+- `reader.pagingEnabled` must be set to true.
 
-- `responseToSnapshotTransform` - This allows you to extract and build nextPage information for the next iterations url JSONata. See the paging unit tests for an example.
+- `reader.responseToSnapshotTransform` - This allows you to extract and build nextPage information for the next iterations url JSONata. See the paging unit tests for an example.
 
-- `lastPageValidator` - JSONata applied to the response which evaluates to a boolean. This JSONata determines whether there is a nextPage or stop iterating pages.
+- `reader.lastPageValidator` - JSONata applied to the response which evaluates to a boolean. This JSONata determines whether there is a nextPage or stop iterating pages.
 
 Paging is often implemented on scheduled flows, executed by the Scheduler Service.
 
