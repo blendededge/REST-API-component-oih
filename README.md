@@ -100,7 +100,7 @@ The secret service can currently support these secret types:
 - **SIMPLE** - Constains a `username` and `passphrase` and will be used for `Basic Auth`
 - **MIXED** - The `payload` of this type is a stringified JSON object. The `payload` string is parsed into an object before being added to the component config object. Because of the flexible nature of this type a JSONata transformation config is provided `secretAuthTransform`. The output of this transformation will replace the `config.auth` configuration.  The `secretAuthTransform` will work for tranforming the data for other types but isn't necessary since the other secret types have well-defined structure.
 - **API_KEY** - Contains a `key` and `headerName` and will be used for `API Key Auth`
-- **OA1_TWO_LEGGED** - Contains `expiresAt`
+- **OA1_TWO_LEGGED** - Contains `consumerKey`, `consumerSecret`, `signatureMethod`, `version` (defaults to `1.0`), and optionally, depending on the requirements of the endpoint, contains `accessToken`, `accessTokenSecret`, and `realm`. These values will be automatically pulled from the secret and used to generate and sign an OAuth1 header for the request.
 - **OA1_THREE_LEGGED** - Contains `accessToken` which will be sent as a Bearer Token in the request header
 - **OA2_AUTHORIZATION_CODE** - Contains `accessToken` which will be sent as a Bearer Token in the request header
 - **SESSION_AUTH** - Contains `accessToken` which will be sent as a Bearer Token in the request header
