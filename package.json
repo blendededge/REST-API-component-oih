@@ -44,5 +44,8 @@
   "bugs": {
     "url": "https://github.com/openintegrationhub/REST-API-component/issues"
   },
-  "homepage": "https://github.com/openintegrationhub/REST-API-component#readme"
+  "homepage": "https://github.com/openintegrationhub/REST-API-component#readme",
+  "engines": {
+    "node": ">=16"
+  }
 }
