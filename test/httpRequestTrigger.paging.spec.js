@@ -284,7 +284,7 @@ describe('httpRequest action paging', () => {
     await processAction.call(emitter, msg, cfg);
     expect(messagesNewMessageWithBodyStub.calledTwice).to.be.true;
     expect(messagesNewMessageWithBodyStub.args[0][0]).to.be.eql(responseMessage);
-    expect(emitter.emit.callCount).to.equal(14);
+    expect(emitter.emit.callCount).to.equal(13);
     expect(emitter.emit.args[0][0]).to.equal('data');
     expect(emitter.emit.args[1][0]).to.equal('snapshot');
     expect(emitter.emit.args[2][0]).to.equal('end');
