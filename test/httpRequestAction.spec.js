@@ -1822,8 +1822,8 @@ describe('httpRequest action', () => {
       process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
       await processAction.call(emitter, msg, cfg);
-      expect(emitter.emit.getCall(1).args[0]).to.be.equals('error');
-      expect(emitter.emit.getCall(1).args[1].message).to.be.equals(
+      expect(emitter.emit.getCall(2).args[0]).to.be.equals('error');
+      expect(emitter.emit.getCall(2).args[1].message).to.be.equals(
         `Timeout error! Waiting for response more than ${cfg.requestTimeoutPeriod} ms`,
       );
     });
