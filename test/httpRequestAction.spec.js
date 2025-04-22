@@ -68,7 +68,7 @@ describe('httpRequest action', () => {
 
       await processAction.call(emitter, msg, cfg);
       expect(
-        messagesNewMessageWithBodyStub.lastCall.args[0].errorCode
+        messagesNewMessageWithBodyStub.lastCall.args[0].errorCode,
       ).to.eql(
         404,
       );
@@ -79,7 +79,7 @@ describe('httpRequest action', () => {
         messagesNewMessageWithBodyStub.lastCall.args[0].errorData.headers,
       ).to.eql(['one']);
     });
-  })
+  });
 
   describe('API key credentials', () => {
     const msg = {
@@ -800,7 +800,7 @@ describe('httpRequest action', () => {
           method,
         },
         auth: {},
-        requestTimeoutPeriod: 100
+        requestTimeoutPeriod: 100,
       };
 
       nock(transform(msg, { customMapping: cfg.reader.url }))
@@ -810,7 +810,7 @@ describe('httpRequest action', () => {
 
       await processAction.call(emitter, msg, cfg).catch((e) => {
         expect(emitter.emit.withArgs('rebound').callCount).to.be.equal(1);
-      })
+      });
     });
 
     it('jsonata response validator false && enableRebound true', async () => {
@@ -841,6 +841,17 @@ describe('httpRequest action', () => {
         .delay(20 + Math.random() * 200)
         .reply((uri, requestBody) => [200, responseMessage]);
 
+      // Mock the buildErrorStructure function or ensure it has the required data
+      const errorObj = {
+        message: {
+          url: 'http://example.com',
+          method,
+          reason: 'JSONata validation against response failed and request should be retried in rebound queue',
+        },
+      };
+
+      // Stub the emit method for rebound to return the error object
+      emitter.emit.withArgs('rebound').returns(Promise.resolve(errorObj));
 
       await processAction.call(emitter, msg, cfg);
       expect(emitter.emit.withArgs('rebound').callCount).to.be.equal(1);
@@ -872,7 +883,6 @@ describe('httpRequest action', () => {
         .intercept('/', method)
         .delay(20 + Math.random() * 200)
         .reply(404);
-
 
       await processAction.call(emitter, msg, cfg);
       expect(emitter.emit.withArgs('rebound').callCount).to.be.equal(1);
@@ -1051,11 +1061,11 @@ describe('httpRequest action', () => {
 
       const expectedJSON = {
         note: {
-          to: "Tove",
-          from: "Jani",
-          heading: "Reminder",
-          body: "Don't forget me this weekend!"
-        }
+          to: 'Tove',
+          from: 'Jani',
+          heading: 'Reminder',
+          body: "Don't forget me this weekend!",
+        },
       };
 
       nock(transform(msg, { customMapping: cfg.reader.url }))
@@ -1088,7 +1098,7 @@ describe('httpRequest action', () => {
           method,
         },
         auth: {},
-        explicitArray: true
+        explicitArray: true,
       };
 
       const xml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -1102,18 +1112,18 @@ describe('httpRequest action', () => {
       const expectedJSON = {
         note: {
           to: [
-            "Tove"
+            'Tove',
           ],
           from: [
-            "Jani"
+            'Jani',
           ],
           heading: [
-            "Reminder"
+            'Reminder',
           ],
           body: [
-            "Don't forget me this weekend!"
-          ]
-        }
+            "Don't forget me this weekend!",
+          ],
+        },
       };
 
       nock(transform(msg, { customMapping: cfg.reader.url }))
@@ -1158,11 +1168,11 @@ describe('httpRequest action', () => {
 
       const expectedJSON = {
         note: {
-          to: "Tove",
-          from: "Jani",
-          heading: "Reminder",
-          body: "Don't forget me this weekend!"
-        }
+          to: 'Tove',
+          from: 'Jani',
+          heading: 'Reminder',
+          body: "Don't forget me this weekend!",
+        },
       };
 
       nock(transform(msg, { customMapping: cfg.reader.url }))
@@ -1522,9 +1532,9 @@ describe('httpRequest action', () => {
         });
 
       await processAction.call(emitter, msg, cfg);
-      expect(emitter.emit.callCount).to.equal(2);
-      expect(emitter.emit.args[0][0]).to.equal('error');
-      expect(emitter.emit.args[1][0]).to.equal('end');
+      expect(emitter.emit.callCount).to.equal(4);
+      expect(emitter.emit.args[2][0]).to.equal('error');
+      expect(emitter.emit.args[3][0]).to.equal('end');
     });
     it('redirect request false POST && dontThrowErrorFlg false', async () => {
       const messagesNewMessageWithBodyStub = stub(
@@ -1560,9 +1570,9 @@ describe('httpRequest action', () => {
         });
 
       await processAction.call(emitter, msg, cfg);
-      expect(emitter.emit.callCount).to.equal(2);
-      expect(emitter.emit.args[0][0]).to.equal('error');
-      expect(emitter.emit.args[1][0]).to.equal('end');
+      expect(emitter.emit.callCount).to.equal(4);
+      expect(emitter.emit.args[2][0]).to.equal('error');
+      expect(emitter.emit.args[3][0]).to.equal('end');
     });
     it('redirect request true POST && dontThrowErrorFlg false', async () => {
       const messagesNewMessageWithBodyStub = stub(
@@ -1747,9 +1757,9 @@ describe('httpRequest action', () => {
       };
 
       await processAction.call(emitter, msg, cfg);
-      expect(emitter.emit.callCount).to.equal(2);
-      expect(emitter.emit.args[0][0]).to.equal('error');
-      expect(emitter.emit.args[1][0]).to.equal('end');
+      expect(emitter.emit.callCount).to.equal(4);
+      expect(emitter.emit.args[2][0]).to.equal('error');
+      expect(emitter.emit.args[3][0]).to.equal('end');
     });
   });
 
@@ -1812,8 +1822,8 @@ describe('httpRequest action', () => {
       process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
       await processAction.call(emitter, msg, cfg);
-      expect(emitter.emit.getCall(0).args[0]).to.be.equals('error');
-      expect(emitter.emit.getCall(0).args[1].message).to.be.equals(
+      expect(emitter.emit.getCall(1).args[0]).to.be.equals('error');
+      expect(emitter.emit.getCall(1).args[1].message).to.be.equals(
         `Timeout error! Waiting for response more than ${cfg.requestTimeoutPeriod} ms`,
       );
     });

@@ -285,16 +285,20 @@ describe('httpRequest action paging', () => {
     expect(messagesNewMessageWithBodyStub.calledTwice).to.be.true;
     expect(messagesNewMessageWithBodyStub.args[0][0]).to.be.eql(responseMessage);
     expect(emitter.emit.callCount).to.equal(13);
-    expect(emitter.emit.args[0][0]).to.equal('data');
-    expect(emitter.emit.args[1][0]).to.equal('snapshot');
-    expect(emitter.emit.args[2][0]).to.equal('end');
+    expect(emitter.emit.args[0][0]).to.equal('trace:http-request');
+    expect(emitter.emit.args[1][0]).to.equal('trace:http-response');
+    expect(emitter.emit.args[2][0]).to.equal('data');
     expect(emitter.emit.args[3][0]).to.equal('snapshot');
-    expect(emitter.emit.args[4][0]).to.equal('data');
+    expect(emitter.emit.args[4][0]).to.equal('end');
     expect(emitter.emit.args[5][0]).to.equal('snapshot');
-    expect(emitter.emit.args[6][0]).to.equal('end');
-    expect(emitter.emit.args[7][0]).to.equal('snapshot');
-    // Validate end is only called once
-    expect(emitter.emit.args[6][0]).to.equal('end');
+    expect(emitter.emit.args[6][0]).to.equal('trace:http-request');
+    expect(emitter.emit.args[7][0]).to.equal('trace:http-response');
+    expect(emitter.emit.args[8][0]).to.equal('data');
+    expect(emitter.emit.args[9][0]).to.equal('snapshot');
+    expect(emitter.emit.args[10][0]).to.equal('end');
+    expect(emitter.emit.args[11][0]).to.equal('snapshot');
+    expect(emitter.emit.args[12][0]).to.equal('end');
+    // Validate end is called three times in total
   });
 
   it('paging loop, error thrown', async () => {
