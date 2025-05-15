@@ -17,7 +17,7 @@
     "Connector"
   ],
   "dependencies": {
-    "@blendededge/ferryman-extensions": "^2.1.0",
+    "@blendededge/ferryman-extensions": "^2.2.0",
     "@openintegrationhub/ferryman": "^2.3.1",
     "@openintegrationhub/ferryman-1-7-0": "npm:@openintegrationhub/ferryman@^1.7.0",
     "axios": "^1.7.7",
